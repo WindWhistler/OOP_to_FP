@@ -1,9 +1,9 @@
-from restaraunt import Restaraunt
+import restaraunt as rt
 from price import Price
 from sale import Sale
 import datetime
 
-restaraunt = Restaraunt()
+restaraunt = rt.Restaraunt()
 
 command = -1
 while command != 0:
@@ -22,46 +22,46 @@ while command != 0:
     command = int(input())
     match command:
         case 1:
-            for price in restaraunt.date_prices(restaraunt.work_date):
+            for price in rt.date_prices(restaraunt.prices, restaraunt.work_date):
                 print(price)
         case 2:
             for dish in restaraunt.dishes:
                 print(dish)
         case 3:
             print("Введите название блюда.")
-            for price in restaraunt.prices_for_dish(restaraunt.get_dish_by_name(input())):
+            for price in rt.prices_for_dish(restaraunt.prices, restaraunt.get_dish_by_name(input())):
                 print(price)
         case 4:
             print("Введите название нового блюда.")
-            restaraunt.add_dish(input())
+            restaraunt.dishes = rt.add_dish(restaraunt.dishes, input())
         case 5:
             print("Сперва выберите блюдо.")
-            dish = restaraunt.get_dish_by_name(input())
+            dish = rt.get_dish_by_name(restaraunt.dishes, input())
             if dish.name != "":
                 print("Введите начало периода действия цены (не раньше текущего рабочего дня) в формате ггггммдд")
                 date = datetime.datetime.strptime(input(), "%Y%m%d")
                 print("Введите цену (целое число)")
-                restaraunt.add_price(Price(date, dish, int(input())))
+                restaraunt.prices = rt.add_price(restaraunt.prices, Price(date, dish, int(input())))
         case 6:
             print("Введите название блюда.")
-            dish = restaraunt.get_dish_by_name(input())
+            dish = rt.get_dish_by_name(restaraunt.dishes, input())
             print("Введите количество проданных блюд")
             restaraunt.sales.append(Sale(restaraunt.work_date, dish, int(input())))
         case 7:
-            print(restaraunt.calculate(restaraunt.work_date))
+            print(rt.calculate(restaraunt.dishes, restaraunt.sales, restaraunt.prices, restaraunt.work_date))
         case 8:
             print("Введите начало периода в формате ггггммдд")
             startDate = datetime.datetime.strptime(input(), "%Y%m%d")
             print("Введите конец периода в формате ггггммдд")
             endDate = datetime.datetime.strptime(input(), "%Y%m%d")
-            print(restaraunt.calculate_period(startDate, endDate))
+            print(rt.calculate_period(restaraunt.dishes, restaraunt.sales, restaraunt.prices, startDate, endDate))
         case 9:
             print("Сперва выберите блюдо.")
-            dish = restaraunt.get_dish_by_name(input())
+            dish = rt.get_dish_by_name(restaraunt.dishes, input())
             if dish.name != "":
                 print("Введите начало периода действия цены в формате ггггммдд")
                 startDate = datetime.datetime.strptime(input(), "%Y%m%d")
                 print("Введите конец периода действия цены в формате ггггммдд")
                 endDate = datetime.datetime.strptime(input(), "%Y%m%d")
                 print("Введите цену (целое число)")
-                restaraunt.add_price_to_past(Price(startDate, endDate, dish, int(input())))
+                restaraunt.prices = rt.add_price_to_past(restaraunt.prices, Price(startDate, endDate, dish, int(input())))
