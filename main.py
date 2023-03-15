@@ -13,10 +13,11 @@ while command != 0:
         "2 - Вывести список всех блюд" + 
         "3 - Вывести историю цен по блюду" + 
         "4 - Добавить блюдо" +
-        "5 - Поставить новую цену на блюдо"
-        "6 - Продать блюдо"
-        "7 - Вывести сегодняшнюю выручку"
-        "8 - Вывести выручку за период"
+        "5 - Поставить новую цену на блюдо" +
+        "6 - Продать блюдо" + 
+        "7 - Вывести сегодняшнюю выручку" +
+        "8 - Вывести выручку за период" +
+        "9 - Изменить цену на предыдущем периоде"
     )
     command = int(input())
     match command:
@@ -54,3 +55,13 @@ while command != 0:
             print("Введите конец периода в формате ггггммдд")
             endDate = datetime.datetime.strptime(input(), "%Y%m%d")
             print(restaraunt.calculate_period(startDate, endDate))
+        case 9:
+            print("Сперва выберите блюдо.")
+            dish = restaraunt.get_dish_by_name(input())
+            if dish.name != "":
+                print("Введите начало периода действия цены в формате ггггммдд")
+                startDate = datetime.datetime.strptime(input(), "%Y%m%d")
+                print("Введите конец периода действия цены в формате ггггммдд")
+                endDate = datetime.datetime.strptime(input(), "%Y%m%d")
+                print("Введите цену (целое число)")
+                restaraunt.add_price_to_past(Price(startDate, endDate, dish, int(input())))

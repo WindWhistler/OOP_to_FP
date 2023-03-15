@@ -18,6 +18,24 @@ class Restaraunt():
         self.price_for_dish_on_day(price.dish, price.dateStart).dateEnd = price.DateStart - datetime.timedelta.days(1)
         self.prices.append(price)
 
+    def add_price_to_past(self, new_price):
+        for old_price in self.prices:
+            if (old_price.dish == new_price.dish 
+                and old_price.dateStart >= new_price.dateStart 
+                and old_price.dateEnd <= new_price.dateEnd
+                ):
+                self.prices.remove(old_price)
+            if (old_price.dish == new_price.dish 
+                and old_price.dateStart < new_price.dateStart 
+                and old_price.dateEnd <= new_price.dateEnd):
+                old_price.dateEnd = new_price.dateStart - datetime.timedelta.days(1)
+            if (old_price.dish == new_price.dish 
+                and old_price.dateStart >= new_price.dateStart 
+                and old_price.dateEnd > new_price.dateEnd):
+                old_price.dateStart = new_price.dateEnd + datetime.timedelta.days(1) 
+        self.prices.append(new_price)
+
+
     def add_dish(self, dish):
         if self.get_dish_by_name(dish.name).name == "":
             self.dishes.append(dish)
